@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radiant Ecommerce</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Radiant Ecommerce</h1>
+        <button onclick="window.location.href='cart.html'">My Cart</button>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#" onclick="showCategory('electronics')">Electronics</a></li>
+            <li><a href="#" onclick="showCategory('clothing')">Clothing</a></li>
+            <li><a href="#" onclick="showCategory('accessories')">Accessories</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div>
+            <label for="priceFilter">Filter by Price:</label>
+            <input type="range" id="priceFilter" min="0" max="1000" step="10" oninput="filterByPrice()">
+            <span id="priceValue">0</span>
+        </div>
+        <div id="product-list" class="grid"></div>
+    </main>
+    <script>
+        let cart = [];
+
+        function addToCart(product) {
+            cart.push(product);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert("Added to Cart");
+        }
+
+        function showCategory(category) {
+            const productList = document.getElementById("product-list");
+            productList.innerHTML = "";
+            products[category].forEach(product => {
+                const productDiv = document.createElement("div");
+                productDiv.classList.add("product");
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                    <button onclick='addToCart(${JSON.stringify(product)})'>Add to Cart</button>
+                `;
+                productList.appendChild(productDiv);
+            });
+        }
+    </script>
+</body>
+</html>
+
+<!-- cart.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My Cart</h1>
+        <button onclick="window.location.href='index.html'">Home</button>
+    </header>
+    <main>
+        <div id="cart-items"></div>
+    </main>
+    <script>
+        function loadCart() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const cartItems = document.getElementById("cart-items");
+            cartItems.innerHTML = "";
+            cart.forEach(product => {
+                const itemDiv = document.createElement("div");
+                itemDiv.classList.add("product");
+                itemDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>$${product.price}</p>
+                `;
+                cartItems.appendChild(itemDiv);
+            });
+        }
+        window.onload = loadCart;
+    </script>
+</body>
+</html>
